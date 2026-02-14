@@ -22,9 +22,9 @@ const App = () => {
         <Title subTitle='Our PROGRAM' title='What We Offer'/>
         <Programs/>
         <About setPlayState={setPlayState}/>
-        <Title subTitle='Gallery' title='Campus Photos'/>
+        <Title subTitle='Gallery' title='Social Initiatives'/>
         <Campus/>
-        <Title subTitle='TESTIMONIALS' title='What Student Says'/>
+        <Title subTitle='TESTIMONIALS' title='What Common Man Says'/>
         <Testimonials/>
         <Title subTitle='Contact Us' title='Get in Touch'/>
         <Contact/>

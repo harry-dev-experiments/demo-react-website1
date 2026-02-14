@@ -36,11 +36,11 @@ const slideBackward = ()=>{
                     <div className="user-info">
                         <img src={user_1} alt="" />
                         <div>
-                            <h3>Emily Williams</h3>
-                            <span>Edusity, USA</span>
+                            <h3>Kanu Mazumder</h3>
+                            <span>Sajirhat, Madhyamgram</span>
                         </div>
                     </div>
-                    <p>Choosing to pursue my degree at Edusity was one of the best decisions I've ever made. The supportive community, state-of-the-art facilities, and commitment to academic excellence have truly exceeded my expectations.</p>
+                    <p>This initiative is truly changing lives in our community.</p>
                 </div>
             </li>
             <li>
@@ -48,11 +48,11 @@ const slideBackward = ()=>{
                     <div className="user-info">
                         <img src={user_2} alt="" />
                         <div>
-                            <h3>William Jackson</h3>
-                            <span>Edusity, USA</span>
+                            <h3>Shailendra Dubey</h3>
+                            <span>Madhyamgram, West Bengal</span>
                         </div>
                     </div>
-                    <p>Choosing to pursue my degree at Edusity was one of the best decisions I've ever made. The supportive community, state-of-the-art facilities, and commitment to academic excellence have truly exceeded my expectations.</p>
+                    <p>Access to healthcare has improved significantly thanks to this program.</p>
                 </div>
             </li>
             <li>
@@ -60,11 +60,11 @@ const slideBackward = ()=>{
                     <div className="user-info">
                         <img src={user_3} alt="" />
                         <div>
-                            <h3>Emily Williams</h3>
-                            <span>Edusity, USA</span>
+                            <h3>Harikesh Tiwari</h3>
+                            <span>Durgapur, West Bengal</span>
                         </div>
                     </div>
-                    <p>Choosing to pursue my degree at Edusity was one of the best decisions I've ever made. The supportive community, state-of-the-art facilities, and commitment to academic excellence have truly exceeded my expectations.</p>
+                    <p>A compassionate approach to community wellness.</p>
                 </div>
             </li>
             <li>
@@ -72,11 +72,11 @@ const slideBackward = ()=>{
                     <div className="user-info">
                         <img src={user_4} alt="" />
                         <div>
-                            <h3>William Jackson</h3>
-                            <span>Edusity, USA</span>
+                            <h3>Avijit Saha</h3>
+                            <span>Howrah, West Bengal</span>
                         </div>
                     </div>
-                    <p>Choosing to pursue my degree at Edusity was one of the best decisions I've ever made. The supportive community, state-of-the-art facilities, and commitment to academic excellence have truly exceeded my expectations.</p>
+                    <p>A well-organized program with meaningful results.</p>
                 </div>
             </li>
         </ul>

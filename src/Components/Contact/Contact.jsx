@@ -17,7 +17,7 @@ const Contact = () => {
 
       // ------Enter your web3forms access key below-------
       
-      formData.append("access_key", "-----Enter your web3forms key----");
+      formData.append("access_key", "1a0e3d2d-d6a3-4d53-8770-30f7dd237f55");
   
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -39,11 +39,11 @@ const Contact = () => {
     <div className='contact'>
       <div className="contact-col">
         <h3>Send us a message <img src={msg_icon} alt="" /></h3>
-        <p>Feel free to reach out through contact form or find our contact information below. Your feedback, questions, and suggestions are important to us as we strive to provide exceptional service to our university community.</p>
+        <p>Feel free to reach out through contact form or find our contact information below. Your feedback, questions, and suggestions are important to us as we strive to provide exceptional service to our social community.</p>
         <ul>
-            <li><img src={mail_icon} alt="" />Contact@GreatStack.dev</li>
-            <li><img src={phone_icon} alt="" />+1 123-456-7890</li>
-            <li><img src={location_icon} alt="" />77 Massachusetts Ave, Cambridge<br/> MA 02139, United States</li>
+            <li><img src={mail_icon} alt="" />debipurdisha2001@gmail.com</li>
+            <li><img src={phone_icon} alt="" />+91-9593690XXX</li>
+            <li><img src={location_icon} alt="" />Debipur, Chandannagar , Hooghly<br/> West Bengal, India</li>
         </ul>
       </div>
       <div className="contact-col">
