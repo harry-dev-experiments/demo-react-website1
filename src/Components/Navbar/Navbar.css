@@ -24,6 +24,23 @@ nav ul li{
     background: #212EA0;
     transition: 0.5s;
 }
+nav .btn {
+    background: #FFF;
+    color: #212EA0;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    border: 0;
+    outline: 0;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+nav .btn:hover {
+    background: #f0f4ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
 .menu-icon{
     display: none;
 }
@@ -55,6 +72,12 @@ nav ul li{
     nav ul li{
         display: block;
         margin: 25px 40px;
+    }
+    nav ul li .btn{
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 15px;
+        margin-top: 5px;
     }
     .menu-icon{
         display: block;
