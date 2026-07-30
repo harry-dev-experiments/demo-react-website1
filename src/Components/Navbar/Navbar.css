@@ -111,13 +111,18 @@ nav .donate-btn:hover {
 }
 
 /* ------- Active Nav Link ------- */
-nav ul li a.active-link,
-nav ul li .active-link {
+nav ul li a.active-link:not(.btn),
+nav ul li .active-link:not(.btn) {
     color: #fff;
     font-weight: 600;
     position: relative;
 }
-nav ul li a.active-link::after,
+nav .btn.active-link {
+    background: #f0f4ff;
+    color: #212EA0;
+    box-shadow: 0 0 0 2px #7bb8ff;
+}
+nav ul li a.active-link:not(.btn)::after,
 nav ul li .active-link:not(.btn)::after {
     content: '';
     position: absolute;
