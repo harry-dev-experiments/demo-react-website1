@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <!-- Deep navy to rich blue gradient for background circle -->
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#1a2fa8"/>
+      <stop offset="100%" stop-color="#08003A"/>
+    </radialGradient>
+
+    <!-- Gold shimmer gradient for accents -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#f5e07a"/>
+      <stop offset="50%"  stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#f5e07a"/>
+    </linearGradient>
+
+    <!-- Outer ring gradient -->
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#f5e07a"/>
+      <stop offset="40%"  stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#e8c84a"/>
+    </linearGradient>
+
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer gold ring -->
+  <circle cx="50" cy="50" r="49" fill="url(#ringGrad)"/>
+
+  <!-- Inner navy circle -->
+  <circle cx="50" cy="50" r="44" fill="url(#bgGrad)"/>
+
+  <!-- Thin inner gold decorative ring -->
+  <circle cx="50" cy="50" r="40" fill="none" stroke="#C9A84C" stroke-width="0.7" opacity="0.6"/>
+
+  <!-- Rising sun rays at top -->
+  <g transform="translate(50, 24)" filter="url(#glow)">
+    <!-- Sun center -->
+    <circle cx="0" cy="0" r="5" fill="url(#goldGrad)"/>
+    <!-- Sun rays -->
+    <line x1="0" y1="-8"  x2="0"  y2="-11" stroke="#f5e07a" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="6" y1="-6"  x2="8"  y2="-8"  stroke="#f5e07a" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="8" y1="0"   x2="11" y2="0"   stroke="#f5e07a" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="6" y1="6"   x2="8"  y2="8"   stroke="#f5e07a" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+    <line x1="-6" y1="-6" x2="-8" y2="-8"  stroke="#f5e07a" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-8" y1="0"  x2="-11" y2="0"  stroke="#f5e07a" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-6" y1="6"  x2="-8" y2="8"   stroke="#f5e07a" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+  </g>
+
+  <!-- House / Home silhouette -->
+  <!-- Roof triangle -->
+  <polygon points="50,34 28,52 72,52" fill="url(#goldGrad)" opacity="0.95"/>
+  <!-- Roof highlight line -->
+  <line x1="50" y1="34" x2="28" y2="52" stroke="#fff" stroke-width="0.4" opacity="0.3"/>
+  <line x1="50" y1="34" x2="72" y2="52" stroke="#fff" stroke-width="0.4" opacity="0.3"/>
+
+  <!-- House body -->
+  <rect x="32" y="51" width="36" height="22" rx="1" fill="#1a2fa8" stroke="url(#goldGrad)" stroke-width="1"/>
+
+  <!-- Door (arch) -->
+  <path d="M45,73 L45,60 Q50,55 55,60 L55,73 Z" fill="url(#goldGrad)" opacity="0.9"/>
+
+  <!-- Left window -->
+  <rect x="35" y="57" width="7" height="6" rx="1" fill="url(#goldGrad)" opacity="0.8"/>
+  <!-- Right window -->
+  <rect x="58" y="57" width="7" height="6" rx="1" fill="url(#goldGrad)" opacity="0.8"/>
+
+  <!-- Small cross/plus on roof peak (community/welfare symbol) -->
+  <line x1="50" y1="30" x2="50" y2="36" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="47" y1="33" x2="53" y2="33" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- "DDSS" text arc at bottom -->
+  <path id="bottomArc" d="M 20,73 A 32,32 0 0,0 80,73" fill="none"/>
+  <text font-family="Georgia, 'Times New Roman', serif" font-size="9.5" font-weight="bold"
+        fill="url(#goldGrad)" letter-spacing="3" text-anchor="middle">
+    <textPath href="#bottomArc" startOffset="50%">D D S S</textPath>
+  </text>
+
+  <!-- Bottom decorative dots -->
+  <circle cx="27" cy="78" r="1.5" fill="#C9A84C" opacity="0.7"/>
+  <circle cx="73" cy="78" r="1.5" fill="#C9A84C" opacity="0.7"/>
+</svg>

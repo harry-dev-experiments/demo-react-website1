@@ -88,3 +88,49 @@ nav .btn:hover {
         right: -200px;
     }
 }
+
+/* ------- Donate Button ------- */
+nav .donate-btn {
+    background: linear-gradient(135deg, #e8283c, #c0182a) !important;
+    color: #fff !important;
+    font-weight: 600;
+    box-shadow: 0 0 0 0 rgba(232, 40, 60, 0.5);
+    animation: donate-pulse 2s infinite;
+    transition: all 0.3s ease;
+}
+nav .donate-btn:hover {
+    background: linear-gradient(135deg, #c0182a, #9c1121) !important;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 20px rgba(232, 40, 60, 0.5) !important;
+    animation: none;
+}
+@keyframes donate-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(232,40,60,0.5); }
+    70%  { box-shadow: 0 0 0 10px rgba(232,40,60,0); }
+    100% { box-shadow: 0 0 0 0 rgba(232,40,60,0); }
+}
+
+/* ------- Active Nav Link ------- */
+nav ul li a.active-link,
+nav ul li .active-link {
+    color: #fff;
+    font-weight: 600;
+    position: relative;
+}
+nav ul li a.active-link::after,
+nav ul li .active-link:not(.btn)::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #7bb8ff;
+    border-radius: 2px;
+    animation: underline-in 0.3s ease;
+}
+@keyframes underline-in {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+

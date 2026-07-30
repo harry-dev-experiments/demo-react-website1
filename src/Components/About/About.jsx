@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import useScrollReveal from '../../hooks/useScrollReveal';
 import './About.css';
 import about_img from '../../assets/about.png';
 import play_icon from '../../assets/play-icon.png';
@@ -11,23 +12,25 @@ import leader_4 from '../../assets/user-1.png';
 
 const About = ({ setPlayState }) => {
   const slider = useRef();
-  let tx = 0;
+  const leftRef = useScrollReveal();
+  const rightRef = useScrollReveal();
+  const tx = useRef(0);
 
   const slideForward = () => {
-    if (tx > -50) {
-      tx -= 25;
+    if (tx.current > -50) {
+      tx.current -= 25;
     }
     if (slider.current) {
-      slider.current.style.transform = `translateX(${tx}%)`;
+      slider.current.style.transform = `translateX(${tx.current}%)`;
     }
   };
 
   const slideBackward = () => {
-    if (tx < 0) {
-      tx += 25;
+    if (tx.current < 0) {
+      tx.current += 25;
     }
     if (slider.current) {
-      slider.current.style.transform = `translateX(${tx}%)`;
+      slider.current.style.transform = `translateX(${tx.current}%)`;
     }
   };
 
@@ -35,7 +38,7 @@ const About = ({ setPlayState }) => {
     <div className="about-wrapper" id="about">
       {/* About Main Section */}
       <div className="about">
-        <div className="about-left">
+        <div className="about-left reveal-left" ref={leftRef}>
           <img src={about_img} alt="About Us" className="about-img" />
           <img
             src={play_icon}
@@ -46,7 +49,7 @@ const About = ({ setPlayState }) => {
             }}
           />
         </div>
-        <div className="about-right">
+        <div className="about-right reveal-right" ref={rightRef}>
           <h3>DEBIPUR DISHA SEVA SANSTHA</h3>
           <h2>Together for a Better Tomorrow.</h2>
           <p>

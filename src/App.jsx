@@ -12,6 +12,7 @@ import Contact from './Components/Contact/Contact'
 import Footer from './Components/Footer/Footer'
 import VideoPlayer from './Components/VideoPlayer/VideoPlayer'
 import ScrollToTop from './Components/ScrollToTop/ScrollToTop'
+import Stats from './Components/Stats/Stats'
 
 const App = () => {
 
@@ -21,6 +22,7 @@ const App = () => {
     <div>
      <Navbar/>
      <Hero/>
+     <Stats/>
      <div className="container">
         <Title subTitle='Our PROGRAM' title='What We Offer'/>
         <Programs/>

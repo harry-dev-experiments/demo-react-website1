@@ -1,47 +1,171 @@
-.hero{
+.hero {
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(rgba(8,0,58,0.7),rgba(8,0,58,0.7)), url('../../assets/hero.png');
+    background: linear-gradient(rgba(8,0,58,0.75), rgba(8,0,58,0.75)), url('../../assets/hero.png');
     background-size: cover;
     background-position: center;
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
+    animation: hero-fade-in 1.2s ease;
 }
-.hero-text{
+
+@keyframes hero-fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-text {
     text-align: center;
     max-width: 800px;
+    animation: hero-slide-up 1s ease 0.3s both;
 }
-.hero-text h1{
+
+@keyframes hero-slide-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+
+    /* Gold shimmer gradient text */
+    background: linear-gradient(
+        90deg,
+        #c9a84c 0%,
+        #f5e07a 30%,
+        #e8c84a 50%,
+        #f5e07a 70%,
+        #c9a84c 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+
+    /* Decorative lines on both sides */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+    content: '';
+    flex: 0 0 70px;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+    opacity: 0.85;
+}
+
+@keyframes shimmer {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
+}
+
+
+.hero-text h1 {
     font-size: 30px;
     font-weight: 300;
+    margin-bottom: 6px;
 }
-.hero-text h2{
-    font-weight: 2500;
-    font-weight: 75px;
-    font-size: 75px;
-}
-.hero-text p{
-    max-width: 700px;
-    margin: 10px auto 20px;
-    line-height: 1.4;
-}
-/* ---------- media query --------- */
 
-@media (max-width: 850px){
-    .hero-text h1{
-        font-size: 40px;
+.hero-text h2 {
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #ffffff 0%, #a8c4ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-typewriter {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 18px auto 32px;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.typed-text {
+    font-weight: 500;
+}
+
+.cursor {
+    display: inline-block;
+    color: #7bb8ff;
+    font-weight: 300;
+    animation: blink 0.75s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+.hero-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.hero-primary-btn {
+    background: #fff;
+    color: #212121;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.hero-primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(255,255,255,0.3);
+}
+
+.hero-donate-btn {
+    background: linear-gradient(135deg, #e8283c, #c0182a);
+    color: #fff;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.hero-donate-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(232,40,60,0.4);
+    background: linear-gradient(135deg, #c0182a, #9c1121);
+}
+
+/* ---------- media query --------- */
+@media (max-width: 850px) {
+    .hero-text h2 {
+        font-size: 52px;
     }
 }
-@media (max-width: 650px){
-    .hero-text h1{
-        font-size: 30px;
-        max-width: 400px;
-        margin: auto;
+
+@media (max-width: 650px) {
+    .hero-text h1 {
+        font-size: 22px;
     }
-    .hero-text p{
-        font-size: 14px;
-        margin: 15px auto 30px;
+    .hero-text h2 {
+        font-size: 38px;
+    }
+    .hero-typewriter {
+        font-size: 16px;
+        margin: 14px auto 24px;
+    }
+    .hero-btns {
+        flex-direction: column;
+        align-items: center;
     }
 }
