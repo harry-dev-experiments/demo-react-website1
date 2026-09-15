@@ -24,26 +24,38 @@ const VisionMission = () => {
 
   return (
     <div className='vision-mission' id='vision-mission'>
+      <div className="vm-intro">
+        <span className="vm-kicker">THE DISHA PRINCIPLE</span>
+        <p>One purpose. Three guiding ideas. A more equal tomorrow.</p>
+      </div>
       <div className="vm-container">
-        
+        <div className="vm-art" aria-hidden="true">
+          <span className="vm-orbit vm-orbit-one" />
+          <span className="vm-orbit vm-orbit-two" />
+          <span className="vm-art-star">✦</span>
+          <span className="vm-art-number">01</span>
+        </div>
         <div className="vm-tabs">
-          <button 
+          <button type="button"
+            aria-selected={activeTab === 'vision'}
             className={`vm-tab-btn ${activeTab === 'vision' ? 'active' : ''}`}
             onClick={() => setActiveTab('vision')}
           >
-            Vision
+            <span className="vm-tab-icon">◉</span><span>Vision</span>
           </button>
-          <button 
+          <button type="button"
+            aria-selected={activeTab === 'mission'}
             className={`vm-tab-btn ${activeTab === 'mission' ? 'active' : ''}`}
             onClick={() => setActiveTab('mission')}
           >
-            Mission
+            <span className="vm-tab-icon">↗</span><span>Mission</span>
           </button>
-          <button 
+          <button type="button"
+            aria-selected={activeTab === 'motto'}
             className={`vm-tab-btn ${activeTab === 'motto' ? 'active' : ''}`}
             onClick={() => setActiveTab('motto')}
           >
-            Motto
+            <span className="vm-tab-icon">✦</span><span>Motto</span>
           </button>
         </div>
 
@@ -53,7 +65,7 @@ const VisionMission = () => {
               key={key} 
               className={`vm-content-pane ${activeTab === key ? 'active' : ''}`}
             >
-              <div className="vm-icon">{tabData[key].icon}</div>
+              <div className="vm-content-label"><span>{tabData[key].icon}</span> {key}</div>
               <h2>{tabData[key].title}</h2>
               <p>{tabData[key].content}</p>
             </div>

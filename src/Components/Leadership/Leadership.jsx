@@ -47,14 +47,14 @@ export const leadersData = [
     id: 'kanu-mazumder',
     image: user3,
     name: 'Kanu Mazumder',
-    role: 'Members',
+    role: 'Member',
     description: kanuMsg,
   },
   {
     id: 'harikesh-tiwari',
     image: user2,
     name: 'Harikesh Tiwari',
-    role: 'Members',
+    role: 'Member',
     description: harikeshMsg,
   },
 ];
