@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Blog.css';
 import blog1 from '../../assets/blog-1.png';
 import blog2 from '../../assets/blog-2.png';
@@ -89,7 +89,7 @@ const Blog = () => {
         {filteredPosts.map((post) => (
           <div key={post.id} className="blog-card" onClick={() => setActiveModalPost(post)}>
             <div className="blog-img-wrapper">
-              <img src={post.image} alt={post.title} className="blog-img" />
+              <img src={post.image} alt={post.title} className="blog-img" loading="lazy" />
               <span className="blog-badge">{post.category}</span>
             </div>
             <div className="blog-info">
@@ -132,7 +132,7 @@ const Blog = () => {
             </div>
 
             <div className="blog-modal-img-container">
-              <img src={activeModalPost.image} alt={activeModalPost.title} className="blog-modal-img" />
+              <img src={activeModalPost.image} alt={activeModalPost.title} className="blog-modal-img" loading="lazy" />
             </div>
 
             <div className="blog-modal-body">

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import './Testimonials.css'
 import next_icon from '../../assets/next-icon.png'
 import back_icon from '../../assets/back-icon.png'
@@ -27,14 +27,14 @@ const slideBackward = ()=>{
 
   return (
     <div className='testimonials' id='testimonials'>
-      <img src={next_icon} alt="" className='next-btn' onClick={slideForward}/>
-      <img src={back_icon} alt="" className='back-btn' onClick={slideBackward}/>
+      <img src={next_icon} alt="Next testimonial" className='next-btn' onClick={slideForward}/>
+      <img src={back_icon} alt="Previous testimonial" className='back-btn' onClick={slideBackward}/>
       <div className="slider">
         <ul ref={slider}>
             <li>
                 <div className="slide">
                     <div className="user-info">
-                        <img src={user_1} alt="" />
+                        <img src={user_1} alt="Kanu Mazumder" loading="lazy" />
                         <div>
                             <h3>Kanu Mazumder</h3>
                             <span>Sajirhat, Madhyamgram</span>
@@ -46,7 +46,7 @@ const slideBackward = ()=>{
             <li>
                 <div className="slide">
                     <div className="user-info">
-                        <img src={user_2} alt="" />
+                        <img src={user_2} alt="Shailendra Dubey" loading="lazy" />
                         <div>
                             <h3>Shailendra Dubey</h3>
                             <span>Madhyamgram, West Bengal</span>
@@ -58,7 +58,7 @@ const slideBackward = ()=>{
             <li>
                 <div className="slide">
                     <div className="user-info">
-                        <img src={user_3} alt="" />
+                        <img src={user_3} alt="Harikesh Tiwari" loading="lazy" />
                         <div>
                             <h3>Harikesh Tiwari</h3>
                             <span>Durgapur, West Bengal</span>
@@ -70,7 +70,7 @@ const slideBackward = ()=>{
             <li>
                 <div className="slide">
                     <div className="user-info">
-                        <img src={user_4} alt="" />
+                        <img src={user_4} alt="Avijit Saha" loading="lazy" />
                         <div>
                             <h3>Avijit Saha</h3>
                             <span>Howrah, West Bengal</span>

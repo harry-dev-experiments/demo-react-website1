@@ -4,8 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- =====================================================
+         Content Security Policy
+         Restricts scripts, frames, and connections to trusted
+         origins only, mitigating XSS and data-injection attacks.
+    ====================================================== -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://res.cloudinary.com; media-src 'self' blob:; connect-src 'self' https://api.web3forms.com https://api.cloudinary.com; frame-src 'none';"
+    />
+
+    <!-- =====================================================
+         Resource Preloads — critical above-the-fold images
+         Telling the browser to fetch these early dramatically
+         improves Largest Contentful Paint (LCP).
+    ====================================================== -->
+    <link rel="preload" as="image" href="/src/assets/hero.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/src/assets/about.png" />
+
     <!-- Primary SEO -->
-    <title>Debipur Disha Seva Sanstha | Health, Education & Community Welfare NGO</title>
+    <title>Debipur Disha Seva Sanstha | Health, Education &amp; Community Welfare NGO</title>
     <meta name="description" content="Debipur Disha Seva Sanstha is a registered NGO in West Bengal, India, dedicated to rural healthcare, education, women empowerment, and community development since 2001." />
     <meta name="keywords" content="NGO West Bengal, Debipur Disha Seva Sanstha, rural healthcare, education NGO, women empowerment, Chandannagar, Hooghly, volunteer India, social welfare" />
     <meta name="author" content="Debipur Disha Seva Sanstha" />
@@ -16,7 +34,7 @@
     <meta property="og:description" content="Join us in our mission of rural healthcare, education, and social welfare in West Bengal, India." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://debipurdisha.org" />
-    <meta property="og:image" content="/src/assets/hero.png" />
+    <meta property="og:image" content="https://debipurdisha.org/og-image.png" />
     <meta property="og:locale" content="en_IN" />
 
     <!-- Twitter Card -->

@@ -1,7 +1,12 @@
 .hero {
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(rgba(8,0,58,0.75), rgba(8,0,58,0.75)), url('../../assets/hero.png');
+    background: linear-gradient(
+        to bottom,
+        rgba(8, 0, 58, 0.25) 0%,
+        rgba(8, 0, 58, 0.18) 40%,
+        rgba(8, 0, 58, 0.52) 100%
+    ), url('../../assets/hero.png');
     background-size: cover;
     background-position: center;
     color: #fff;

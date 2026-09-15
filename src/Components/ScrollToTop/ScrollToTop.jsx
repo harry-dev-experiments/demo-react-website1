@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './ScrollToTop.css';
 import white_arrow from '../../assets/white-arrow.png';
 

@@ -1,20 +1,28 @@
-import React, { useRef } from 'react'
 import './VideoPlayer.css'
-import video from '../../assets/college-video.mp4'
 
 const VideoPlayer = ({playState, setPlayState}) => {
 
-    const player = useRef(null);
-
-    const closePlayer = (e)=>{
-        if(e.target === player.current){
+    const closePlayer = (e) => {
+        if (e.target === e.currentTarget) {
            setPlayState(false); 
         }
     }
 
   return (
-    <div className={`video-player ${playState?'':'hide'}`} ref={player} onClick={closePlayer}>
-      <video src={video} autoPlay muted controls></video>
+    <div
+      className={`video-player ${playState ? '' : 'hide'}`}
+      onClick={closePlayer}
+    >
+      {/* src is set only when playState is true to avoid loading the 15 MB
+          video file until the user actually clicks Play */}
+      {playState && (
+        <video
+          src={new URL('../../assets/college-video.mp4', import.meta.url).href}
+          autoPlay
+          muted
+          controls
+        />
+      )}
     </div>
   )
 }

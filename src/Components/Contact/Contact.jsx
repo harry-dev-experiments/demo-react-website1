@@ -17,7 +17,7 @@ const Contact = () => {
 
       // ------Enter your web3forms access key below-------
       
-      formData.append("access_key", "1a0e3d2d-d6a3-4d53-8770-30f7dd237f55");
+      formData.append("access_key", import.meta.env.VITE_WEB3FORMS_KEY);
   
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -25,11 +25,9 @@ const Contact = () => {
       }).then((res) => res.json());
   
       if (res.success) {
-        console.log("Success", res);
         setResult(res.message);
         event.target.reset();
       } else {
-        console.log("Error", res);
         setResult(res.message);
       }
     };
@@ -38,12 +36,12 @@ const Contact = () => {
   return (
     <div className='contact' id='contact'>
       <div className="contact-col">
-        <h3>Send us a message <img src={msg_icon} alt="" /></h3>
+        <h3>Send us a message <img src={msg_icon} alt="Message icon" loading="lazy" /></h3>
         <p>Feel free to reach out through contact form or find our contact information below. Your feedback, questions, and suggestions are important to us as we strive to provide exceptional service to our social community.</p>
         <ul>
-            <li><img src={mail_icon} alt="" />debipurdisha2001@gmail.com</li>
-            <li><img src={phone_icon} alt="" />+91-9593690XXX</li>
-            <li><img src={location_icon} alt="" />Debipur, Chandannagar , Hooghly<br/> West Bengal, India</li>
+            <li><img src={mail_icon} alt="Email" loading="lazy" />debipurdisha2001@gmail.com</li>
+            <li><img src={phone_icon} alt="Phone" loading="lazy" />+91-9593690XXX</li>
+            <li><img src={location_icon} alt="Location" loading="lazy" />Debipur, Chandannagar , Hooghly<br/> West Bengal, India</li>
         </ul>
       </div>
       <div className="contact-col">
@@ -56,7 +54,7 @@ const Contact = () => {
             <input type="tel" name='phone' placeholder='Enter your mobile number' required/>
             <label>Write your messages here</label>
             <textarea name="message" rows="6" placeholder='Enter your message' required></textarea>
-            <button type='submit' className='btn dark-btn'>Submit now <img src={white_arrow} alt="" /></button>
+            <button type='submit' className='btn dark-btn'>Submit now <img src={white_arrow} alt="Arrow" loading="lazy" /></button>
         </form>
         <span>{result}</span>
       </div>

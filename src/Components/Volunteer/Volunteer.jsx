@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Volunteer.css';
 import msg_icon from '../../assets/msg-icon.png';
 import mail_icon from '../../assets/mail-icon.png';
@@ -17,7 +17,7 @@ const Volunteer = () => {
     const formData = new FormData(event.target);
 
     // Web3Forms Access Key
-    formData.append('access_key', '1a0e3d2d-d6a3-4d53-8770-30f7dd237f55');
+    formData.append('access_key', import.meta.env.VITE_WEB3FORMS_KEY);
     formData.append('subject', 'New Volunteer Application - Debipur Disha Seva Sanstha');
     formData.append('from_name', 'NGO Website Volunteer Portal');
 
