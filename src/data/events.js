@@ -93,7 +93,11 @@ export const saveEvents = (events) => fetch('/.netlify/functions/events', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(events),
 }).then((response) => {
-  if (!response.ok) throw new Error('The shared event catalogue could not be updated.');
+  if (!response.ok) {
+    return response.json().catch(() => ({})).then(({ message }) => {
+      throw new Error(message || 'The shared event catalogue could not be updated.');
+    });
+  }
   window.localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
   window.dispatchEvent(new Event(EVENTS_UPDATED_EVENT));
 });
@@ -102,7 +106,11 @@ export const clearStoredEvents = () => fetch('/.netlify/functions/events', {
   method: 'DELETE',
   credentials: 'include',
 }).then((response) => {
-  if (!response.ok) throw new Error('The shared event catalogue could not be reset.');
+  if (!response.ok) {
+    return response.json().catch(() => ({})).then(({ message }) => {
+      throw new Error(message || 'The shared event catalogue could not be reset.');
+    });
+  }
   window.localStorage.removeItem(EVENTS_STORAGE_KEY);
   window.dispatchEvent(new Event(EVENTS_UPDATED_EVENT));
 });
