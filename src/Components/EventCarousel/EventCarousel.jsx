@@ -4,6 +4,11 @@ import './EventCarousel.css';
 import useScrollReveal from '../../hooks/useScrollReveal';
 import { EVENTS_UPDATED_EVENT, loadEvents } from '../../data/events';
 
+const optimizeImageUrl = (imageUrl, width) => {
+  if (!imageUrl || !imageUrl.includes('/upload/')) return imageUrl;
+  return imageUrl.replace('/upload/', `/upload/f_auto,q_auto,w_${width}/`);
+};
+
 const EventCard = ({ event }) => {
   const images = event.images?.length ? event.images : [event.image];
   const [activeImage, setActiveImage] = useState(0);
@@ -49,7 +54,13 @@ const EventCard = ({ event }) => {
           onClick={() => showLightboxImage(activeImage)}
           aria-label={`Open ${event.title} image ${activeImage + 1} in lightbox`}
         >
-          <img src={images[activeImage]} alt={`${event.title} - image ${activeImage + 1}`} />
+          <img
+            src={optimizeImageUrl(images[activeImage], 1200)}
+            alt={`${event.title} - image ${activeImage + 1}`}
+            loading="lazy"
+            sizes="(max-width: 640px) 100vw, (max-width: 900px) 50vw, 66vw"
+            decoding="async"
+          />
           <span className="event-gallery-zoom" aria-hidden="true">+</span>
         </button>
         <span className="ec-category-badge">{event.category}</span>
@@ -68,7 +79,12 @@ const EventCard = ({ event }) => {
               }}
               aria-label={`Show image ${index + 1} of ${event.title}`}
             >
-              <img src={image} alt="" />
+              <img
+                src={optimizeImageUrl(image, 180)}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
             </button>
           ))}
         </div>
@@ -113,9 +129,10 @@ const EventCard = ({ event }) => {
                 </button>
               )}
               <img
-                src={images[lightboxImage]}
+                src={optimizeImageUrl(images[lightboxImage], 1800)}
                 alt={`${event.title} - image ${lightboxImage + 1} of ${images.length}`}
                 className="event-lightbox-image"
+                decoding="async"
               />
               {images.length > 1 && (
                 <button
@@ -161,7 +178,12 @@ const EventCard = ({ event }) => {
                     aria-label={`Show image ${index + 1}`}
                     aria-current={index === lightboxImage ? 'true' : undefined}
                   >
-                    <img src={image} alt="" />
+                    <img
+                      src={optimizeImageUrl(image, 180)}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </button>
                 ))}
               </div>

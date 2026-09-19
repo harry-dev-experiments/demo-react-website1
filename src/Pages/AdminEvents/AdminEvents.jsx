@@ -8,10 +8,11 @@ import {
   loadSharedEvents,
   saveEvents,
 } from '../../data/events';
-import { uploadImageToCloudinary } from '../../services/cloudinary';
+import {
+  validateImageFile,
+  uploadImageToCloudinary,
+} from '../../services/cloudinary';
 import './AdminEvents.css';
-
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
 const emptyForm = {
   title: '',
@@ -91,40 +92,34 @@ const AdminEvents = () => {
   const handleImage = (event) => {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
-    const invalidFile = files.find((file) => !file.type.startsWith('image/'));
-    if (invalidFile) {
-      setError('Please choose image files only.');
-      return;
-    }
-    const oversizedFile = files.find((file) => file.size > MAX_IMAGE_SIZE);
-    if (oversizedFile) {
-      setError('Each image must be 5 MB or smaller.');
-      return;
-    }
-    setImageFiles(files);
-    setForm((currentForm) => ({
-      ...currentForm,
-      images: files.map((file) => URL.createObjectURL(file)),
-    }));
-    setError('');
+    Promise.all(files.map(validateImageFile))
+      .then(() => {
+        setImageFiles(files);
+        setForm((currentForm) => ({
+          ...currentForm,
+          images: files.map((file) => URL.createObjectURL(file)),
+        }));
+        setError('');
+      })
+      .catch((validationError) => {
+        setError(validationError instanceof Error ? validationError.message : 'The selected images are invalid.');
+      });
   };
 
   const handleExistingImages = (eventId, event) => {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
-    if (files.some((file) => !file.type.startsWith('image/'))) {
-      setError('Please choose image files only.');
-      return;
-    }
-    if (files.some((file) => file.size > MAX_IMAGE_SIZE)) {
-      setError('Each image must be 5 MB or smaller.');
-      return;
-    }
-    setEditingImages((current) => ({
-      ...current,
-      [eventId]: [...(current[eventId] || []), ...files],
-    }));
-    setError('');
+    Promise.all(files.map(validateImageFile))
+      .then(() => {
+        setEditingImages((current) => ({
+          ...current,
+          [eventId]: [...(current[eventId] || []), ...files],
+        }));
+        setError('');
+      })
+      .catch((validationError) => {
+        setError(validationError instanceof Error ? validationError.message : 'The selected images are invalid.');
+      });
     event.target.value = '';
   };
 
@@ -281,7 +276,7 @@ const AdminEvents = () => {
       <section className="admin-layout">
         <form className="admin-card admin-event-form" onSubmit={handleSubmit}>
           <h2>Publish an event</h2>
-          <p className="admin-muted">Add multiple images to one event. They are uploaded to Cloudinary and restored after reload.</p>
+          <p className="admin-muted">Add multiple JPEG, PNG, or WebP images. Each file must be 5 MB or smaller and no side may exceed 8000px.</p>
           <label>Event title<input value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} required /></label>
           <div className="admin-form-grid">
             <label>Date<input type="date" value={form.date} onChange={(event) => setForm({ ...form, date: event.target.value })} required /></label>
@@ -292,7 +287,7 @@ const AdminEvents = () => {
           <label>Description<textarea rows="5" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} required /></label>
           <label>
             Event images (select multiple)
-            <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={handleImage} required={!form.images.length} />
+            <input ref={imageInputRef} type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={handleImage} required={!form.images.length} />
           </label>
           {form.images.length > 0 && (
             <div>
@@ -348,7 +343,7 @@ const AdminEvents = () => {
                       Add images
                       <input
                         type="file"
-                        accept="image/*"
+                        accept="image/jpeg,image/png,image/webp"
                         multiple
                         onChange={(uploadEvent) => handleExistingImages(event.id, uploadEvent)}
                       />
