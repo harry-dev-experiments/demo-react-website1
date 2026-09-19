@@ -25,51 +25,65 @@ const VisionMission = () => {
   return (
     <div className='vision-mission' id='vision-mission'>
       <div className="vm-intro">
-        <span className="vm-kicker">THE DISHA PRINCIPLE</span>
+        <div>
+          <span className="vm-kicker">THE DISHA PRINCIPLE</span>
+          <h3>Our compass for community change</h3>
+        </div>
         <p>One purpose. Three guiding ideas. A more equal tomorrow.</p>
       </div>
       <div className="vm-container">
-        <div className="vm-art" aria-hidden="true">
-          <span className="vm-orbit vm-orbit-one" />
-          <span className="vm-orbit vm-orbit-two" />
-          <span className="vm-art-star">✦</span>
-          <span className="vm-art-number">01</span>
+        <div className="vm-side-panel">
+          <span className="vm-side-label">DDSS / DISHA</span>
+          <div className="vm-side-mark" aria-hidden="true">✦</div>
+          <p>Serving with dignity, building with people, and working toward equality since 2000.</p>
+          <span className="vm-side-number">01 <i>— 03</i></span>
         </div>
-        <div className="vm-tabs">
+        <div className="vm-main">
+          <div className="vm-tabs" role="tablist" aria-label="Our guiding principles">
           <button type="button"
+            role="tab"
             aria-selected={activeTab === 'vision'}
+            aria-controls="vm-panel-vision"
             className={`vm-tab-btn ${activeTab === 'vision' ? 'active' : ''}`}
             onClick={() => setActiveTab('vision')}
           >
             <span className="vm-tab-icon">◉</span><span>Vision</span>
           </button>
           <button type="button"
+            role="tab"
             aria-selected={activeTab === 'mission'}
+            aria-controls="vm-panel-mission"
             className={`vm-tab-btn ${activeTab === 'mission' ? 'active' : ''}`}
             onClick={() => setActiveTab('mission')}
           >
             <span className="vm-tab-icon">↗</span><span>Mission</span>
           </button>
           <button type="button"
+            role="tab"
             aria-selected={activeTab === 'motto'}
+            aria-controls="vm-panel-motto"
             className={`vm-tab-btn ${activeTab === 'motto' ? 'active' : ''}`}
             onClick={() => setActiveTab('motto')}
           >
             <span className="vm-tab-icon">✦</span><span>Motto</span>
           </button>
-        </div>
+          </div>
 
-        <div className="vm-content-wrapper">
-          {Object.keys(tabData).map((key) => (
-            <div 
-              key={key} 
-              className={`vm-content-pane ${activeTab === key ? 'active' : ''}`}
-            >
-              <div className="vm-content-label"><span>{tabData[key].icon}</span> {key}</div>
-              <h2>{tabData[key].title}</h2>
-              <p>{tabData[key].content}</p>
-            </div>
-          ))}
+          <div className="vm-content-wrapper">
+            {Object.keys(tabData).map((key) => (
+              <div
+                key={key}
+                id={`vm-panel-${key}`}
+                role="tabpanel"
+                aria-hidden={activeTab !== key}
+                className={`vm-content-pane ${activeTab === key ? 'active' : ''}`}
+              >
+                <div className="vm-content-label"><span>{tabData[key].icon}</span> {key}</div>
+                <h2>{tabData[key].title}</h2>
+                <p>{tabData[key].content}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
       </div>

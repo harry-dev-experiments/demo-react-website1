@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import './EventCarousel.css';
 import useScrollReveal from '../../hooks/useScrollReveal';
 import { EVENTS_UPDATED_EVENT, loadEvents } from '../../data/events';
@@ -6,11 +7,47 @@ import { EVENTS_UPDATED_EVENT, loadEvents } from '../../data/events';
 const EventCard = ({ event }) => {
   const images = event.images?.length ? event.images : [event.image];
   const [activeImage, setActiveImage] = useState(0);
+  const [lightboxImage, setLightboxImage] = useState(null);
+
+  useEffect(() => {
+    if (lightboxImage === null) return undefined;
+
+    const handleKeyDown = (keyboardEvent) => {
+      if (keyboardEvent.key === 'Escape') setLightboxImage(null);
+      if (keyboardEvent.key === 'ArrowLeft') {
+        setLightboxImage((current) => (current - 1 + images.length) % images.length);
+      }
+      if (keyboardEvent.key === 'ArrowRight') {
+        setLightboxImage((current) => (current + 1) % images.length);
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [images.length, lightboxImage]);
+
+  const showLightboxImage = (index) => {
+    setLightboxImage(index);
+  };
 
   return (
     <article className="event-card">
       <div className="event-card-gallery">
-        <img src={images[activeImage]} alt={`${event.title} - image ${activeImage + 1}`} />
+        <button
+          type="button"
+          className="event-gallery-open"
+          onClick={() => showLightboxImage(activeImage)}
+          aria-label={`Open ${event.title} image ${activeImage + 1} in lightbox`}
+        >
+          <img src={images[activeImage]} alt={`${event.title} - image ${activeImage + 1}`} />
+          <span className="event-gallery-zoom" aria-hidden="true">+</span>
+        </button>
         <span className="ec-category-badge">{event.category}</span>
         <span className="event-image-count">{images.length} {images.length === 1 ? 'photo' : 'photos'}</span>
       </div>
@@ -21,7 +58,10 @@ const EventCard = ({ event }) => {
               type="button"
               key={image}
               className={index === activeImage ? 'event-gallery-thumb active' : 'event-gallery-thumb'}
-              onClick={() => setActiveImage(index)}
+              onClick={() => {
+                setActiveImage(index);
+                showLightboxImage(index);
+              }}
               aria-label={`Show image ${index + 1} of ${event.title}`}
             >
               <img src={image} alt="" />
@@ -38,6 +78,79 @@ const EventCard = ({ event }) => {
           <span>👥 {event.attendees} Attended</span>
         </div>
       </div>
+      {lightboxImage !== null && createPortal(
+        <div
+          className="event-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${event.title} photo gallery`}
+          onClick={(clickEvent) => {
+            if (clickEvent.target === clickEvent.currentTarget) setLightboxImage(null);
+          }}
+        >
+          <div className="event-lightbox-content">
+            <button
+              type="button"
+              className="event-lightbox-close"
+              onClick={() => setLightboxImage(null)}
+              aria-label="Close photo gallery"
+            >
+              ×
+            </button>
+            <div className="event-lightbox-image-wrap">
+              {images.length > 1 && (
+                <button
+                  type="button"
+                  className="event-lightbox-arrow event-lightbox-previous"
+                  onClick={() => setLightboxImage((current) => (current - 1 + images.length) % images.length)}
+                  aria-label="Show previous image"
+                >
+                  ‹
+                </button>
+              )}
+              <img
+                src={images[lightboxImage]}
+                alt={`${event.title} - image ${lightboxImage + 1} of ${images.length}`}
+                className="event-lightbox-image"
+              />
+              {images.length > 1 && (
+                <button
+                  type="button"
+                  className="event-lightbox-arrow event-lightbox-next"
+                  onClick={() => setLightboxImage((current) => (current + 1) % images.length)}
+                  aria-label="Show next image"
+                >
+                  ›
+                </button>
+              )}
+            </div>
+            <div className="event-lightbox-caption">
+              <div>
+                <span>{event.category}</span>
+                <h3>{event.title}</h3>
+              </div>
+              <p>{lightboxImage + 1} / {images.length}</p>
+            </div>
+            {images.length > 1 && (
+              <div className="event-lightbox-thumbnails" aria-label="Choose gallery image">
+                {images.map((image, index) => (
+                  <button
+                    type="button"
+                    key={image}
+                    className={index === lightboxImage ? 'active' : ''}
+                    onClick={() => setLightboxImage(index)}
+                    aria-label={`Show image ${index + 1}`}
+                    aria-current={index === lightboxImage ? 'true' : undefined}
+                  >
+                    <img src={image} alt="" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>,
+        document.body,
+      )}
     </article>
   );
 };

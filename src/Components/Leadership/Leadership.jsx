@@ -5,7 +5,10 @@ import leader2 from '../../assets/president.jpeg';
 import leader3 from '../../assets/secretary.jpeg';
 import user1 from '../../assets/executiveMember.jpeg';
 import user2 from '../../assets/member.jpeg';
-import user3 from '../../assets/user-1.png';
+import user3 from '../../assets/user-1.jpeg';
+import user4 from '../../assets/user-4.png';
+import user5 from '../../assets/leader-1.png';
+import user6 from '../../assets/leader-2.png';
 
 import chairmanMsg from '../../data/leader_messages/chairman.txt?raw';
 import presidentMsg from '../../data/leader_messages/president.txt?raw';
@@ -13,6 +16,9 @@ import secretaryMsg from '../../data/leader_messages/secretary.txt?raw';
 import executiveMsg from '../../data/leader_messages/executive.txt?raw';
 import kanuMsg from '../../data/leader_messages/kanu-mazumder.txt?raw';
 import harikeshMsg from '../../data/leader_messages/harikesh-tiwari.txt?raw';
+import ananyaMsg from '../../data/leader_messages/ananya-sen.txt?raw';
+import rohitMsg from '../../data/leader_messages/rohit-das.txt?raw';
+import meeraMsg from '../../data/leader_messages/meera-nair.txt?raw';
 
 export const leadersData = [
   {
@@ -56,6 +62,27 @@ export const leadersData = [
     name: 'Harikesh Tiwari',
     role: 'Member',
     description: harikeshMsg,
+  },
+  {
+    id: 'ananya-sen',
+    image: user4,
+    name: 'Ananya Sen',
+    role: 'Community Coordinator',
+    description: ananyaMsg,
+  },
+  {
+    id: 'rohit-das',
+    image: user5,
+    name: 'Rohit Das',
+    role: 'Youth Program Lead',
+    description: rohitMsg,
+  },
+  {
+    id: 'meera-nair',
+    image: user6,
+    name: 'Meera Nair',
+    role: 'Social Outreach Member',
+    description: meeraMsg,
   },
 ];
 
