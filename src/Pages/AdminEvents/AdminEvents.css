@@ -201,7 +201,8 @@
 }
 
 .admin-event-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr minmax(180px, 1.2fr) auto;
   align-items: center;
   gap: 12px;
   border-bottom: 1px solid #e2e8f0;
@@ -212,22 +213,76 @@
   border-bottom: 0;
 }
 
-.admin-event-row img {
+.admin-event-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.admin-event-image {
+  position: relative;
+}
+
+.admin-event-image img {
   width: 64px;
   height: 52px;
   border-radius: 7px;
   object-fit: cover;
 }
 
-.admin-event-row div {
+.admin-image-remove {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #b91c1c;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.admin-image-remove:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.admin-event-details {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.admin-event-row span {
+.admin-event-details span {
   color: #64748b;
   font-size: 12px;
+}
+
+.admin-event-image-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.admin-file-button {
+  position: relative;
+  display: inline-block;
+  padding: 7px 10px;
+  font-size: 12px;
+}
+
+.admin-file-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
 }
 
 @media (max-width: 800px) {
@@ -238,6 +293,14 @@
   .admin-header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .admin-event-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-delete-button {
+    margin-left: 0;
   }
 }
 

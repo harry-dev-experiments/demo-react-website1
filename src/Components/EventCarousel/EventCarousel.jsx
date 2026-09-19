@@ -36,6 +36,10 @@ const EventCard = ({ event }) => {
     setLightboxImage(index);
   };
 
+  const getDownloadUrl = (imageUrl) => imageUrl.includes('/upload/')
+    ? imageUrl.replace('/upload/', '/upload/fl_attachment/')
+    : imageUrl;
+
   return (
     <article className="event-card">
       <div className="event-card-gallery">
@@ -129,7 +133,22 @@ const EventCard = ({ event }) => {
                 <span>{event.category}</span>
                 <h3>{event.title}</h3>
               </div>
-              <p>{lightboxImage + 1} / {images.length}</p>
+              <div className="event-lightbox-actions">
+                <p>{lightboxImage + 1} / {images.length}</p>
+                <a
+                  className="event-lightbox-download"
+                  href={getDownloadUrl(images[lightboxImage])}
+                  download={`${event.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${lightboxImage + 1}.jpg`}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Download current image"
+                  title="Download image"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 19h14" />
+                  </svg>
+                </a>
+              </div>
             </div>
             {images.length > 1 && (
               <div className="event-lightbox-thumbnails" aria-label="Choose gallery image">
@@ -156,11 +175,12 @@ const EventCard = ({ event }) => {
 };
 
 const EventCarousel = () => {
-  const [events, setEvents] = useState(() => loadEvents());
+  const [events, setEvents] = useState([]);
   const revealRef = useScrollReveal();
 
   useEffect(() => {
-    const refreshEvents = () => setEvents(loadEvents());
+    const refreshEvents = () => loadEvents().then(setEvents);
+    refreshEvents();
     window.addEventListener(EVENTS_UPDATED_EVENT, refreshEvents);
     return () => window.removeEventListener(EVENTS_UPDATED_EVENT, refreshEvents);
   }, []);

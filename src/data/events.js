@@ -65,29 +65,44 @@ export const defaultEvents = [
 const EVENTS_STORAGE_KEY = 'debipur-events';
 export const EVENTS_UPDATED_EVENT = 'debipur-events-updated';
 
-export const loadEvents = () => {
-  const storedEvents = window.localStorage.getItem(EVENTS_STORAGE_KEY);
-  if (!storedEvents) return defaultEvents;
+export const loadEvents = () => fetch('/.netlify/functions/events', { credentials: 'include' })
+  .then((response) => {
+    if (!response.ok) throw new Error('Shared event catalogue unavailable.');
+    return response.json();
+  })
+  .then(({ events }) => (Array.isArray(events) && events.length
+    ? events.map((event) => ({
+        ...event,
+        images: event.images?.length ? event.images : event.image ? [event.image] : [],
+      }))
+    : defaultEvents))
+  .catch(() => {
+    const storedEvents = window.localStorage.getItem(EVENTS_STORAGE_KEY);
+    if (!storedEvents) return defaultEvents;
+    try {
+      const parsedEvents = JSON.parse(storedEvents);
+      return Array.isArray(parsedEvents) ? parsedEvents : defaultEvents;
+    } catch {
+      return defaultEvents;
+    }
+  });
 
-  try {
-    const parsedEvents = JSON.parse(storedEvents);
-    return Array.isArray(parsedEvents)
-      ? parsedEvents.map((event) => ({
-          ...event,
-          images: event.images?.length ? event.images : event.image ? [event.image] : [],
-        }))
-      : defaultEvents;
-  } catch {
-    return defaultEvents;
-  }
-};
-
-export const saveEvents = (events) => {
+export const saveEvents = (events) => fetch('/.netlify/functions/events', {
+  method: 'PUT',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(events),
+}).then((response) => {
+  if (!response.ok) throw new Error('The shared event catalogue could not be updated.');
   window.localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
   window.dispatchEvent(new Event(EVENTS_UPDATED_EVENT));
-};
+});
 
-export const clearStoredEvents = () => {
+export const clearStoredEvents = () => fetch('/.netlify/functions/events', {
+  method: 'DELETE',
+  credentials: 'include',
+}).then((response) => {
+  if (!response.ok) throw new Error('The shared event catalogue could not be reset.');
   window.localStorage.removeItem(EVENTS_STORAGE_KEY);
   window.dispatchEvent(new Event(EVENTS_UPDATED_EVENT));
-};
+});

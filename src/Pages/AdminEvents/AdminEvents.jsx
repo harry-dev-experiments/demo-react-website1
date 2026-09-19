@@ -24,10 +24,12 @@ const AdminEvents = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [form, setForm] = useState(emptyForm);
   const [imageFiles, setImageFiles] = useState([]);
-  const [events, setEvents] = useState(() => loadEvents());
+  const [events, setEvents] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [editingImages, setEditingImages] = useState({});
+  const [savingEventId, setSavingEventId] = useState(null);
   const imageInputRef = useRef(null);
 
   useEffect(() => {
@@ -35,6 +37,10 @@ const AdminEvents = () => {
       .then((response) => setIsAuthenticated(response.ok))
       .catch(() => setIsAuthenticated(false));
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) loadEvents().then(setEvents);
+  }, [isAuthenticated]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -76,6 +82,70 @@ const AdminEvents = () => {
     setError('');
   };
 
+  const handleExistingImages = (eventId, event) => {
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
+    if (files.some((file) => !file.type.startsWith('image/'))) {
+      setError('Please choose image files only.');
+      return;
+    }
+    if (files.some((file) => file.size > MAX_IMAGE_SIZE)) {
+      setError('Each image must be 5 MB or smaller.');
+      return;
+    }
+    setEditingImages((current) => ({
+      ...current,
+      [eventId]: [...(current[eventId] || []), ...files],
+    }));
+    setError('');
+    event.target.value = '';
+  };
+
+  const removeExistingImage = async (eventId, imageIndex) => {
+    const event = events.find((item) => item.id === eventId);
+    if (!event || event.images.length <= 1) {
+      setError('An event must keep at least one image.');
+      return;
+    }
+    const updatedEvents = events.map((item) => item.id === eventId
+      ? { ...item, images: item.images.filter((_, index) => index !== imageIndex) }
+      : item);
+    setSavingEventId(eventId);
+    setError('');
+    try {
+      await saveEvents(updatedEvents);
+      setEvents(updatedEvents);
+      setSuccess('Event image removed successfully.');
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'The image could not be removed.');
+    } finally {
+      setSavingEventId(null);
+    }
+  };
+
+  const saveExistingImages = async (eventId) => {
+    const files = editingImages[eventId] || [];
+    if (!files.length) return;
+    const event = events.find((item) => item.id === eventId);
+    if (!event) return;
+    setSavingEventId(eventId);
+    setError('');
+    try {
+      const uploadedImages = await Promise.all(files.map(uploadImageToCloudinary));
+      const updatedEvents = events.map((item) => item.id === eventId
+        ? { ...item, images: [...item.images, ...uploadedImages] }
+        : item);
+      await saveEvents(updatedEvents);
+      setEvents(updatedEvents);
+      setEditingImages((current) => ({ ...current, [eventId]: [] }));
+      setSuccess('New event images added successfully.');
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'The images could not be added.');
+    } finally {
+      setSavingEventId(null);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
@@ -89,7 +159,7 @@ const AdminEvents = () => {
       const imageUrls = await Promise.all(imageFiles.map(uploadImageToCloudinary));
       const newEvent = { ...form, images: imageUrls, id: `custom-${Date.now()}` };
       const updatedEvents = [newEvent, ...events];
-      saveEvents(updatedEvents);
+      await saveEvents(updatedEvents);
       setEvents(updatedEvents);
       form.images.forEach((image) => URL.revokeObjectURL(image));
       setForm(emptyForm);
@@ -105,14 +175,18 @@ const AdminEvents = () => {
 
   const handleDelete = (id) => {
     const updatedEvents = events.filter((event) => event.id !== id);
-    saveEvents(updatedEvents);
-    setEvents(updatedEvents);
+    saveEvents(updatedEvents).then(() => setEvents(updatedEvents)).catch((deleteError) => {
+      setError(deleteError instanceof Error ? deleteError.message : 'The event could not be deleted.');
+    });
   };
 
   const handleReset = () => {
-    clearStoredEvents();
-    setEvents(defaultEvents);
-    setSuccess('Custom events removed and default events restored.');
+    clearStoredEvents().then(() => {
+      setEvents(defaultEvents);
+      setSuccess('Custom events removed and default events restored.');
+    }).catch((resetError) => {
+      setError(resetError instanceof Error ? resetError.message : 'The event catalogue could not be reset.');
+    });
   };
 
   if (!isAuthenticated) {
@@ -212,10 +286,46 @@ const AdminEvents = () => {
           <div className="admin-event-list">
             {events.map((event) => (
               <article className="admin-event-row" key={event.id}>
-                <img src={event.images[0]} alt="" />
-                <div>
+                <div className="admin-event-images">
+                  {event.images.map((image, index) => (
+                    <div className="admin-event-image" key={image}>
+                      <img src={image} alt={`${event.title} image ${index + 1}`} />
+                      <button
+                        type="button"
+                        className="admin-image-remove"
+                        onClick={() => removeExistingImage(event.id, index)}
+                        disabled={savingEventId === event.id || event.images.length <= 1}
+                        aria-label={`Remove image ${index + 1} from ${event.title}`}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="admin-event-details">
                   <strong>{event.title}</strong>
-                  <span>{event.date} · {event.category}</span>
+                  <span>{event.date} · {event.category} · {event.images.length} images</span>
+                  <div className="admin-event-image-actions">
+                    <label className="admin-secondary-button admin-file-button">
+                      Add images
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={(uploadEvent) => handleExistingImages(event.id, uploadEvent)}
+                      />
+                    </label>
+                    {(editingImages[event.id] || []).length > 0 && (
+                      <button
+                        type="button"
+                        className="admin-primary-button"
+                        onClick={() => saveExistingImages(event.id)}
+                        disabled={savingEventId === event.id}
+                      >
+                        {savingEventId === event.id ? 'Saving...' : `Save ${(editingImages[event.id] || []).length} new`}
+                      </button>
+                    )}
+                  </div>
                 </div>
                 {event.id.startsWith('custom-') && (
                   <button className="admin-delete-button" type="button" onClick={() => handleDelete(event.id)}>Delete</button>
