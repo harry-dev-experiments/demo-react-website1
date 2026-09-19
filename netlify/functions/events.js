@@ -70,6 +70,9 @@ export const handler = async (event) => {
         return response(400, { message: 'Invalid event data.' });
       }
       if (!Array.isArray(events)) return response(400, { message: 'Events must be an array.' });
+      if (events.length === 0) {
+        return response(400, { message: 'At least one event is required in the catalogue.' });
+      }
       await store.setJSON(EVENTS_KEY, events);
       return response(200, { events });
     }

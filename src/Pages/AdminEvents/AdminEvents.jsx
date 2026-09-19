@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { clearStoredEvents, defaultEvents, loadEvents, saveEvents } from '../../data/events';
+import {
+  clearStoredEvents,
+  defaultEvents,
+  loadEvents,
+  loadLocalEvents,
+  loadSharedEvents,
+  saveEvents,
+} from '../../data/events';
 import { uploadImageToCloudinary } from '../../services/cloudinary';
 import './AdminEvents.css';
 
@@ -30,6 +37,7 @@ const AdminEvents = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [editingImages, setEditingImages] = useState({});
   const [savingEventId, setSavingEventId] = useState(null);
+  const [recoveredEvents, setRecoveredEvents] = useState([]);
   const imageInputRef = useRef(null);
 
   useEffect(() => {
@@ -39,8 +47,27 @@ const AdminEvents = () => {
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated) loadEvents().then(setEvents);
+    if (!isAuthenticated) return;
+    Promise.all([loadEvents(), loadSharedEvents()]).then(([loadedEvents, sharedEvents]) => {
+      setEvents(loadedEvents);
+      const localEvents = loadLocalEvents();
+      if (!sharedEvents.length && localEvents.some((event) => event.id?.startsWith('custom-'))) {
+        setRecoveredEvents(localEvents);
+        setSuccess('Previous browser events were recovered. Save them to make them available on every device.');
+      }
+    });
   }, [isAuthenticated]);
+
+  const syncRecoveredEvents = async () => {
+    try {
+      await saveEvents(recoveredEvents);
+      setEvents(recoveredEvents);
+      setRecoveredEvents([]);
+      setSuccess('Previous events are now available across devices.');
+    } catch (syncError) {
+      setError(syncError instanceof Error ? syncError.message : 'Previous events could not be synced.');
+    }
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -174,6 +201,10 @@ const AdminEvents = () => {
   };
 
   const handleDelete = (id) => {
+    if (events.length <= 1) {
+      window.alert('At least one event is required in the event catalogue.');
+      return;
+    }
     const updatedEvents = events.filter((event) => event.id !== id);
     saveEvents(updatedEvents).then(() => setEvents(updatedEvents)).catch((deleteError) => {
       setError(deleteError instanceof Error ? deleteError.message : 'The event could not be deleted.');
@@ -281,7 +312,14 @@ const AdminEvents = () => {
         <section className="admin-card">
           <div className="admin-list-heading">
             <h2>Published events</h2>
-            <button className="admin-danger-button" type="button" onClick={handleReset}>Restore defaults</button>
+            <div className="admin-header-actions">
+              {recoveredEvents.length > 0 && (
+                <button className="admin-primary-button" type="button" onClick={syncRecoveredEvents}>
+                  Sync recovered events
+                </button>
+              )}
+              <button className="admin-danger-button" type="button" onClick={handleReset}>Restore defaults</button>
+            </div>
           </div>
           <div className="admin-event-list">
             {events.map((event) => (

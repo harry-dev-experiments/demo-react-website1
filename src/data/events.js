@@ -65,42 +65,61 @@ export const defaultEvents = [
 const EVENTS_STORAGE_KEY = 'debipur-events';
 export const EVENTS_UPDATED_EVENT = 'debipur-events-updated';
 
-export const loadEvents = () => fetch('/.netlify/functions/events', { credentials: 'include' })
+const normalizeEvents = (events) => (Array.isArray(events)
+  ? events.map((event) => ({
+      ...event,
+      images: event.images?.length ? event.images : event.image ? [event.image] : [],
+    }))
+  : []);
+
+export const loadLocalEvents = () => {
+  const storedEvents = window.localStorage.getItem(EVENTS_STORAGE_KEY);
+  if (!storedEvents) return [];
+  try {
+    return normalizeEvents(JSON.parse(storedEvents));
+  } catch {
+    return [];
+  }
+};
+
+export const loadSharedEvents = () => fetch('/.netlify/functions/events', { credentials: 'include' })
   .then((response) => {
     if (!response.ok) throw new Error('Shared event catalogue unavailable.');
     return response.json();
   })
-  .then(({ events }) => (Array.isArray(events) && events.length
-    ? events.map((event) => ({
-        ...event,
-        images: event.images?.length ? event.images : event.image ? [event.image] : [],
-      }))
-    : defaultEvents))
+  .then(({ events }) => normalizeEvents(events));
+
+export const loadEvents = () => loadSharedEvents()
+  .then((events) => {
+    if (events.length) return events;
+    const localEvents = loadLocalEvents();
+    return localEvents.length ? localEvents : defaultEvents;
+  })
   .catch(() => {
-    const storedEvents = window.localStorage.getItem(EVENTS_STORAGE_KEY);
-    if (!storedEvents) return defaultEvents;
-    try {
-      const parsedEvents = JSON.parse(storedEvents);
-      return Array.isArray(parsedEvents) ? parsedEvents : defaultEvents;
-    } catch {
-      return defaultEvents;
-    }
+    const localEvents = loadLocalEvents();
+    return localEvents.length ? localEvents : defaultEvents;
   });
 
-export const saveEvents = (events) => fetch('/.netlify/functions/events', {
+export const saveEvents = (events) => {
+  if (!Array.isArray(events) || events.length === 0) {
+    return Promise.reject(new Error('At least one event is required in the event catalogue.'));
+  }
+
+  return fetch('/.netlify/functions/events', {
   method: 'PUT',
   credentials: 'include',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(events),
-}).then((response) => {
-  if (!response.ok) {
-    return response.json().catch(() => ({})).then(({ message }) => {
-      throw new Error(message || 'The shared event catalogue could not be updated.');
-    });
-  }
-  window.localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
-  window.dispatchEvent(new Event(EVENTS_UPDATED_EVENT));
-});
+  }).then((response) => {
+    if (!response.ok) {
+      return response.json().catch(() => ({})).then(({ message }) => {
+        throw new Error(message || 'The shared event catalogue could not be updated.');
+      });
+    }
+    window.localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
+    window.dispatchEvent(new Event(EVENTS_UPDATED_EVENT));
+  });
+};
 
 export const clearStoredEvents = () => fetch('/.netlify/functions/events', {
   method: 'DELETE',
