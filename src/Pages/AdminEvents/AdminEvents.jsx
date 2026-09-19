@@ -165,7 +165,7 @@ const AdminEvents = () => {
       <section className="admin-layout">
         <form className="admin-card admin-event-form" onSubmit={handleSubmit}>
           <h2>Publish an event</h2>
-          <p className="admin-muted">Images are uploaded to Cloudinary and event details are restored after reload.</p>
+          <p className="admin-muted">Add multiple images to one event. They are uploaded to Cloudinary and restored after reload.</p>
           <label>Event title<input value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} required /></label>
           <div className="admin-form-grid">
             <label>Date<input type="date" value={form.date} onChange={(event) => setForm({ ...form, date: event.target.value })} required /></label>
@@ -175,12 +175,15 @@ const AdminEvents = () => {
           </div>
           <label>Description<textarea rows="5" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} required /></label>
           <label>
-            Event images
+            Event images (select multiple)
             <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={handleImage} required={!form.images.length} />
           </label>
           {form.images.length > 0 && (
-            <div className="admin-image-previews">
+            <div>
+              <p className="admin-image-count">{form.images.length} image{form.images.length === 1 ? '' : 's'} selected</p>
+              <div className="admin-image-previews">
               {form.images.map((image, index) => <img key={image} className="admin-image-preview" src={image} alt={`Selected event preview ${index + 1}`} />)}
+              </div>
             </div>
           )}
           {error && <p className="admin-error" role="alert">{error}</p>}

@@ -7,7 +7,7 @@ import event5 from '../assets/event-5.png';
 export const defaultEvents = [
   {
     id: 'default-1',
-    images: [event1],
+    images: [event1, event3, event5],
     date: 'March 15, 2025',
     category: 'Food Drive',
     title: 'Community Food Distribution Drive',
@@ -18,7 +18,7 @@ export const defaultEvents = [
   },
   {
     id: 'default-2',
-    images: [event2],
+    images: [event2, event4, event1],
     date: 'April 22, 2025',
     category: 'Environment',
     title: 'Green Earth Tree Plantation',
@@ -29,7 +29,7 @@ export const defaultEvents = [
   },
   {
     id: 'default-3',
-    images: [event3],
+    images: [event3, event1, event2],
     date: 'May 10, 2025',
     category: 'Education',
     title: 'Open-Air Learning Workshop',
@@ -40,7 +40,7 @@ export const defaultEvents = [
   },
   {
     id: 'default-4',
-    images: [event4],
+    images: [event4, event2, event3],
     date: 'June 5, 2025',
     category: 'Healthcare',
     title: 'Free Health Check-Up Camp',
@@ -51,7 +51,7 @@ export const defaultEvents = [
   },
   {
     id: 'default-5',
-    images: [event5],
+    images: [event5, event1, event4],
     date: 'July 20, 2025',
     category: 'Fundraising',
     title: 'Annual Gala Fundraising Dinner',

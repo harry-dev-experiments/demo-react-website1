@@ -180,6 +180,13 @@
   gap: 10px;
 }
 
+.admin-image-count {
+  margin: 0 0 8px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .admin-list-heading {
   display: flex;
   align-items: center;
