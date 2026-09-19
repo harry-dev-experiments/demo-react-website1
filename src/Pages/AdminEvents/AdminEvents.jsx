@@ -1,12 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { clearStoredEvents, defaultEvents, loadEvents, saveEvents } from '../../data/events';
 import { uploadImageToCloudinary } from '../../services/cloudinary';
 import './AdminEvents.css';
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-const adminEmail = import.meta.env.VITE_ADMIN_EMAIL;
-const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
 
 const emptyForm = {
   title: '',
@@ -21,7 +19,7 @@ const emptyForm = {
 const AdminEvents = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(
-    () => sessionStorage.getItem('debipur-admin-session') === 'authenticated'
+    false
   );
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [form, setForm] = useState(emptyForm);
@@ -32,19 +30,29 @@ const AdminEvents = () => {
   const [isUploading, setIsUploading] = useState(false);
   const imageInputRef = useRef(null);
 
-  const handleLogin = (event) => {
+  useEffect(() => {
+    fetch('/.netlify/functions/admin-auth', { credentials: 'include' })
+      .then((response) => setIsAuthenticated(response.ok))
+      .catch(() => setIsAuthenticated(false));
+  }, []);
+
+  const handleLogin = async (event) => {
     event.preventDefault();
     setError('');
-    if (!adminEmail || !adminPassword) {
-      setError('Admin credentials are not configured. Add VITE_ADMIN_EMAIL and VITE_ADMIN_PASSWORD to your environment.');
-      return;
+    try {
+      const response = await fetch('/.netlify/functions/admin-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(credentials),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || 'Invalid admin credentials.');
+      setIsAuthenticated(true);
+      setCredentials({ email: '', password: '' });
+    } catch (loginError) {
+      setError(loginError instanceof Error ? loginError.message : 'Unable to sign in.');
     }
-    if (credentials.email !== adminEmail || credentials.password !== adminPassword) {
-      setError('Invalid admin credentials.');
-      return;
-    }
-    sessionStorage.setItem('debipur-admin-session', 'authenticated');
-    setIsAuthenticated(true);
   };
 
   const handleImage = (event) => {
@@ -152,8 +160,11 @@ const AdminEvents = () => {
           <button
             className="admin-link-button"
             type="button"
-            onClick={() => {
-              sessionStorage.removeItem('debipur-admin-session');
+            onClick={async () => {
+              await fetch('/.netlify/functions/admin-auth', {
+                method: 'DELETE',
+                credentials: 'include',
+              });
               setIsAuthenticated(false);
             }}
           >

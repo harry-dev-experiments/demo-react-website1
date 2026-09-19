@@ -1,12 +1,30 @@
 import { useEffect, useRef, useState } from 'react';
 import './Stats.css';
 
-const statsData = [
+const impactStats = [
   { end: 500, suffix: '+', label: 'Families Helped', icon: '🏠' },
   { end: 50, suffix: '+', label: 'Villages Reached', icon: '🌾' },
   { end: 200, suffix: '+', label: 'Active Volunteers', icon: '🤝' },
   { end: 20, suffix: '+', label: 'Years of Service', icon: '🏆' },
 ];
+
+const getVisitorCount = () => {
+  const visitorKey = 'debipur-visitor-count';
+  const sessionKey = 'debipur-visitor-counted';
+
+  try {
+    const currentCount = Number.parseInt(window.localStorage.getItem(visitorKey) || '0', 10);
+    if (!window.sessionStorage.getItem(sessionKey)) {
+      const nextCount = (Number.isNaN(currentCount) ? 0 : currentCount) + 1;
+      window.localStorage.setItem(visitorKey, String(nextCount));
+      window.sessionStorage.setItem(sessionKey, 'true');
+      return nextCount;
+    }
+    return Number.isNaN(currentCount) ? 1 : currentCount;
+  } catch {
+    return 1;
+  }
+};
 
 const useCountUp = (end, duration = 2000, started) => {
   const [count, setCount] = useState(0);
@@ -43,6 +61,11 @@ const StatCard = ({ stat, started }) => {
 const Stats = () => {
   const sectionRef = useRef(null);
   const [started, setStarted] = useState(false);
+  const [visitorCount] = useState(getVisitorCount);
+  const statsData = [
+    ...impactStats,
+    { end: visitorCount, suffix: '', label: 'Website Visitors', icon: '👀' },
+  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
