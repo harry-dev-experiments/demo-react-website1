@@ -37,7 +37,20 @@ const hasAdminSession = (event) => {
 };
 
 export const handler = async (event) => {
-  const store = getStore({ name: STORE_NAME, consistency: 'strong' });
+  const siteID = process.env.NETLIFY_SITE_ID;
+  const token = process.env.NETLIFY_AUTH_TOKEN;
+  if (!siteID || !token) {
+    return response(500, {
+      message: 'Netlify Blobs is not configured. Add NETLIFY_SITE_ID and NETLIFY_AUTH_TOKEN in Netlify environment variables.',
+    });
+  }
+
+  const store = getStore({
+    name: STORE_NAME,
+    siteID,
+    token,
+    consistency: 'strong',
+  });
 
   try {
     if (event.httpMethod === 'GET') {
